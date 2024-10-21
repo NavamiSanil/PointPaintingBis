@@ -1,9 +1,4 @@
-"""
-Author: Amr Elsersy
-email: amrelsersersay@gmail.com
------------------------------------------------------------------------------------
-Description: KITTI & Cityscapes Visualization
-"""
+
 import argparse
 import torch
 from torch.utils.data import DataLoader
@@ -11,14 +6,13 @@ import numpy as np
 import cv2
 from dataset import KittiSemanticDataset
 from utils.label import id2label, trainId2label
-from utils.utils import tensor_to_cv2
 import torch.utils.tensorboard as tensorboard
-import os
 
 class KittiVisualizer:
     def __init__(self):
         self.scene_width = 1000
         self.scene_height = 600  # for horizontal visualization
+        self.pressed_btn = None  # Initialize pressed_btn
 
     def add_semantic_to_image(self, image, semantic):
         return cv2.addWeighted(cv2.resize(image, (semantic.shape[1], semantic.shape[0])).astype(np.uint8), 1,
@@ -95,6 +89,18 @@ class KittiVisualizer:
 
         semantic = np.stack([b, g, r], axis=2)
         return semantic
+
+    def __show(self, image):
+        cv2.namedWindow('total_image')
+        def print_img(event, x, y, flags, param):
+            if event == cv2.EVENT_LBUTTONDOWN:
+                print(image[y, x])
+        cv2.setMouseCallback('total_image', print_img)
+        cv2.imshow("total_image", image)
+        self.__show_2D()
+
+    def __show_2D(self):
+        self.pressed_btn = cv2.waitKey(0) & 0xff  # Set pressed_btn here
 
 def main():
     dataset = KittiSemanticDataset(mode='semantic')
