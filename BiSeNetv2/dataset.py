@@ -17,7 +17,7 @@ from utils.label import labels, id2label
 from utils.utils import TransformationTrain
 
 class KittiSemanticDataset(Dataset):
-    def __init__(self, root = '/kaggle/input/d/navamisunil/kitti-dataset', split = 'train', mode = 'semantic', transform = None, transform_train=None):
+    def __init__(self, root = 'Kitti_sample', split = 'train', mode = 'semantic', transform = None, transform_train=None):
         self.transform = transform
         self.transform_train = transform_train
 
@@ -97,7 +97,7 @@ class KittiSemanticDataset(Dataset):
         # print(np.unique(semantic))
         return semantic
 
-def create_train_dataloader(root = '/kaggle/input/d/navamisunil/kitti-dataset', batch_size = 4):
+def create_train_dataloader(root = 'Kitti_sample', batch_size = 4):
     transform = transforms.ToTensor()
     transform_train = TransformationTrain(scales=[1, 1.3], cropsize=[512, 1024])
     
@@ -107,7 +107,7 @@ def create_train_dataloader(root = '/kaggle/input/d/navamisunil/kitti-dataset', 
     dataloader = DataLoader(train_subset, batch_size, shuffle=True)
     return dataloader
 
-def create_val_dataloader(root = '/kaggle/input/d/navamisunil/kitti-dataset', batch_size = 1):
+def create_val_dataloader(root = 'Kitti_sample', batch_size = 1):
     transform = transforms.ToTensor()
     dataset = KittiSemanticDataset(root = root, split='train', transform=transform)
     indices = list(range(180, len(dataset)))
@@ -115,7 +115,7 @@ def create_val_dataloader(root = '/kaggle/input/d/navamisunil/kitti-dataset', ba
     dataloader = DataLoader(val_subset, batch_size, shuffle=False)
     return dataloader
 
-def create_test_dataloader(root = '/kaggle/input/d/navamisunil/kitti-dataset', batch_size = 1):
+def create_test_dataloader(root = 'Kitti_sample', batch_size = 1):
     transform = transforms.ToTensor()
     dataset = KittiSemanticDataset(root = root, split='test', transform=transform)
     dataloader = DataLoader(dataset, batch_size, shuffle=False)
@@ -199,7 +199,7 @@ def main():
     if args.dataset == 'cityscapes':
         dataset = cityscapes_dataset(mode = args.mode)
     else:
-        dataset = KittiSemanticDataset('/kaggle/input/d/navamisunil/kitti-dataset', mode=args.mode)
+        dataset = KittiSemanticDataset('Kitti_sample', mode=args.mode)
     
     for i in range(len(dataset)):
         image, semantic = dataset[i]
